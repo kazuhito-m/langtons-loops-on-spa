@@ -1,5 +1,7 @@
 <template>
-  <div>
-    <h1>INDEX</h1>
-  </div>
+  <v-container>
+  </v-container>
 </template>
+
+<script setup lang="ts">
+</script>
