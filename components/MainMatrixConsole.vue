@@ -15,14 +15,7 @@
             <div v-if="calculateCount <= 0">-</div>
           </v-card-text>
           <v-card-actions>
-            <v-btn
-              :color="started ? 'disable' : 'error'"
-              outlined
-              :disabled="started"
-              @click="onClickReset"
-            >
-              RESET
-            </v-btn>
+            <v-btn color="error" outlined @click="onClickReset"> RESET </v-btn>
             <v-btn
               color="primary"
               outlined
@@ -54,6 +47,8 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick } from "vue";
+
 const recycleTimeSec = ref(0);
 const drawingRate = ref(0);
 const displayCount = ref(0);
@@ -68,11 +63,15 @@ const onClickReset = (): void => alert("Restクリックイベントよ。");
 
 const onClickStart = (): void => {
   started.value = true;
-  for (let i = 0; i < 1000000; i++) {
-    console.log(i);
-    if (!started.value) break;
-  }
-  started.value = false;
+  nextTick(() => {
+    setTimeout(() => {
+      for (let i = 0; i < 100000; i++) {
+        console.log(i);
+        if (!started.value) break;
+      }
+      started.value = false;
+    }, 10);
+  });
 };
 
 const onClickStop = (): void => {
