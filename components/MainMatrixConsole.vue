@@ -9,9 +9,10 @@
           </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
-            <div>
+            <div v-if="calculateCount > 0">
               {{ drawingRate }}% ({{ displayCount }}/{{ calculateCount }})
             </div>
+            <div v-if="calculateCount <= 0">-</div>
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -63,9 +64,7 @@ const canvasHegith = ref(300);
 
 const started = ref(false);
 
-const onClickReset = (): void => {
-  alert("Restクリックイベントよ。");
-};
+const onClickReset = (): void => alert("Restクリックイベントよ。");
 
 const onClickStart = (): void => {
   started.value = true;
