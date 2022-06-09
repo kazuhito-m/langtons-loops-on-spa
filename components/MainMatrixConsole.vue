@@ -59,8 +59,8 @@ const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
 
-const canvasWidth = ref(300);
-const canvasHegith = ref(300);
+const canvasWidth = ref(512);
+const canvasHegith = ref(512);
 
 const started = ref(false);
 
@@ -68,6 +68,11 @@ const onClickReset = (): void => alert("Restクリックイベントよ。");
 
 const onClickStart = (): void => {
   started.value = true;
+  for (let i = 0; i < 1000000; i++) {
+    console.log(i);
+    if (!started.value) break;
+  }
+  started.value = false;
 };
 
 const onClickStop = (): void => {
