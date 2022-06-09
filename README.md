@@ -1,42 +1,21 @@
-# Nuxt 3 Minimal Starter
+Langtons Loops on SPA.
+==========================
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+## What's this ?
 
-## Setup
+セルラオートマトン「ラングトンのループ」をSPA(Single Page Application)として実装したもの。
 
-Make sure to install the dependencies:
+[C#によるマルチコアのための非同期/並列処理プログラミング](https://www.amazon.co.jp/dp/4774158283) の [サンプルプログラム](https://gihyo.jp/book/2013/978-4-7741-5828-0/support) として出てきたものを、[nuxt3](https://v3.nuxtjs.org/)(TypeScript) を使い移植したものです。 
+
+## Usage
 
 ```bash
-# yarn
-yarn install
-
-# npm
 npm install
-
-# pnpm
-pnpm install --shamefully-hoist
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
 npm run dev
 ```
 
-## Production
+<http://localhost:3000> にて画面を確認。
 
-Build the application for production:
+## author
 
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+Kazuhito Miura ( [@kazuhito_m](https://twitter.com/kazuhito_m "kazuhito_m on Twitter") )
