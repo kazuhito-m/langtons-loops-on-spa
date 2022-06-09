@@ -5,20 +5,47 @@
         <v-col>
           <v-card-text>
             リサイクルタイム:
-            <div>9.999秒</div>
+            <div>{{ recycleTimeSec }} 秒</div>
           </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
-            <div>99% (9999/9999)</div>
+            <div>
+              {{ drawingRate }}% ({{ displayCount }}/{{ calculateCount }})
+            </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="error" outlined>RESET</v-btn>
-            <v-btn color="primary" outlined>START</v-btn>
-            <v-btn color="secondary" outlined>STOP</v-btn>
+            <v-btn
+              :color="started ? 'disable' : 'error'"
+              outlined
+              :disabled="started"
+              @click="onClickReset"
+            >
+              RESET
+            </v-btn>
+            <v-btn
+              color="primary"
+              outlined
+              v-if="!started"
+              @click="onClickStart"
+            >
+              START
+            </v-btn>
+            <v-btn
+              color="secondary"
+              outlined
+              v-if="started"
+              @click="onClickStop"
+            >
+              STOP
+            </v-btn>
           </v-card-actions>
         </v-col>
         <v-col>
-          <canvas ref="matrixCanvas" width="800" height="800"></canvas>
+          <canvas
+            ref="matrixCanvas"
+            :width="canvasWidth"
+            :height="canvasHegith"
+          ></canvas>
         </v-col>
       </v-row>
     </v-container>
@@ -26,6 +53,27 @@
 </template>
 
 <script setup lang="ts">
+const recycleTimeSec = ref(0);
+const drawingRate = ref(0);
+const displayCount = ref(0);
+const calculateCount = ref(0);
+
+const canvasWidth = ref(300);
+const canvasHegith = ref(300);
+
+const started = ref(false);
+
+const onClickReset = (): void => {
+  alert("Restクリックイベントよ。");
+};
+
+const onClickStart = (): void => {
+  started.value = true;
+};
+
+const onClickStop = (): void => {
+  started.value = false;
+};
 </script>
 
 <style scoped>
