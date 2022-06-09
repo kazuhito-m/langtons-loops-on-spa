@@ -1,5 +1,5 @@
 <template>
-  <v-app theme="dark">
+  <v-app>
     <v-app-bar app>
       <v-app-bar-title>Langton's Loops on SPA</v-app-bar-title>
     </v-app-bar>
