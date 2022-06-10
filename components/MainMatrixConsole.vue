@@ -15,7 +15,7 @@
             <div v-if="calculateCount <= 0">-</div>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="error" outlined @click="onClickReset"> RESET </v-btn>
+            <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
             <v-btn
               color="primary"
               outlined
@@ -32,6 +32,7 @@
             >
               STOP
             </v-btn>
+            <v-btn color="red" outlined @click="onClickTest"> TEST </v-btn>
           </v-card-actions>
         </v-col>
         <v-col>
@@ -48,6 +49,7 @@
 
 <script setup lang="ts">
 import { nextTick } from "vue";
+import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 
 const recycleTimeSec = ref(0);
 const drawingRate = ref(0);
@@ -77,6 +79,24 @@ const onClickStart = (): void => {
 const onClickStop = (): void => {
   started.value = false;
 };
+
+const onClickTest = (): void => {
+  const langtonsLoops = new LangtonsLoops();
+  langtonsLoops.langtonsLoops(300);
+  renderCanvasOf(langtonsLoops.lives);
+};
+
+function renderCanvasOf(matrix: number[][]): void {
+  let count = 0;
+  for (let i = 0; i < matrix.length; i++) {
+    const line = matrix[i];
+    for (let j = 0; j < line.length; j++) {
+      const value = line[j];
+      if (value === 0) continue;
+      console.log(++count + ".[" + i + "," + j + "]:" + value);
+    }
+  }
+}
 </script>
 
 <style scoped>
