@@ -52,17 +52,19 @@ export class LangtonsLoops {
         const defaultLives = LangtonsLoops.DEFAULT_LIVES;
         const size = this._size;
 
-        this._lives = this.initializeArray(size, size);
+        const lives = this.initializeArray(size, size);
 
-        const defaultRow = (size - defaultLives[0].length) / 2;
-        const defaultColmn = (size - defaultLives[1].length) / 2;
-        for (let r0 = 0; r0 < defaultLives[0].length; r0++) {
-            for (let c0 = 0; c0 < defaultLives[1].length; c0++) {
+        const defaultRow = Math.floor((size - defaultLives.length) / 2);
+        const defaultColmn = Math.floor((size - defaultLives[0].length) / 2);
+        for (let r0 = 0; r0 < defaultLives.length; r0++) {
+            for (let c0 = 0; c0 < defaultLives[r0].length; c0++) {
                 let r = defaultRow + r0;
                 let c = defaultColmn + c0;
-                this._lives[r][c] = defaultLives[r0][c0];
+                lives[r][c] = defaultLives[r0][c0];
             }
         }
+
+        this._lives = lives;
     }
 
     /**
