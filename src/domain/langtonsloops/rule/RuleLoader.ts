@@ -6,7 +6,7 @@ export class RuleLoader {
         const rule = new Rule();
         const ruleTables: LantonsLoopsTable = require("./data/Lantons-Loops.table.json");
         ruleTables.ruleTable
-            .forEach(rule.add);
+            .forEach(tableItem => rule.add(tableItem));
         return rule;
     }
 }

@@ -4,10 +4,14 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "test": "vitest"
   },
   "devDependencies": {
-    "nuxt": "3.0.0-rc.3"
+    "@nuxt/test-utils-edge": "^3.0.0-rc.3-27581216.fbcbac0",
+    "jsdom": "^19.0.0",
+    "nuxt": "3.0.0-rc.3",
+    "vitest": "^0.14.2"
   },
   "dependencies": {
     "sass": "^1.52.3",

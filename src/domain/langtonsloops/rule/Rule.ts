@@ -7,7 +7,7 @@ export class Rule {
     public next(c: number, n: number, e: number, s: number, w: number): number {
         const key = c * 10000 + n * 1000 + e * 100 + s * 10 + w;
         if (!this._rules.has(key)) return 0;
-        return this._rules[key];
+        return this._rules.get(key);
     }
 
     public get count() {
