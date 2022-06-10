@@ -11,8 +11,6 @@ describe("RuleLoaderTest", () => {
     test("読み込みが成功したルールの「次へ行く」が期待の動きをする。", () => {
         const sut = RuleLoader.load();
 
-        console.log("内部ルールの文字列表現。", sut.toString());
-
         expect(sut.next(7, 0, 2, 5, 2)).toEqual(5);
         expect(sut.next(7, 2, 0, 2, 5)).toEqual(5);
         expect(sut.next(7, 5, 2, 0, 2)).toEqual(5);
