@@ -88,9 +88,8 @@ const onClickTest = (): void => {
   const context = initialRenderCanvasOf(langtonsLoops.lives);
   for (let i = 0; i < 250; i++) {
     langtonsLoops.update();
-    // renderCanvasOf(langtonsLoops.lives, context);
+    renderCanvasOf(langtonsLoops.lives, context);
   }
-  renderCanvasOf(langtonsLoops.lives, context);
 };
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
