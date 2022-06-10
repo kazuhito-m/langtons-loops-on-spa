@@ -27,14 +27,14 @@ export class LangtonsLoops {
         [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
     ];
 
-    public get lives() {
+    public get lives(): number[][] {
         return this._lives;
     }
 
     /**
      * 省略時はデフォルトサイズ。
      */
-    public langtonsLoops(size: number = 64) {
+    public langtonsLoops(size: number = 64): void {
         this.prepare(size);
     }
 

@@ -10,7 +10,7 @@ export class Rule {
         return this._rules.get(key);
     }
 
-    public get count() {
+    public get count(): number {
         return this._rules.size;
     }
 
