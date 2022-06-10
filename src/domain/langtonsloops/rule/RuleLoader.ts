@@ -1,11 +1,10 @@
-import { LantonsLoopsTable } from "./data/LantonsLoopsTable";
 import { Rule } from "./Rule";
+import langtonsLoopsTable from "./data/Lantons-Loops.table.json";
 
 export class RuleLoader {
     public static load(): Rule {
         const rule = new Rule();
-        const ruleTables: LantonsLoopsTable = require("./data/Lantons-Loops.table.json");
-        ruleTables.ruleTable
+        langtonsLoopsTable.ruleTable
             .forEach(tableItem => rule.add(tableItem));
         return rule;
     }
