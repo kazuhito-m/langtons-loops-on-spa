@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { nextTick } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
+import { CellTypes } from "./matrixconsole/CellTypes";
 
 const recycleTimeSec = ref(0);
 const drawingRate = ref(0);
@@ -62,6 +63,8 @@ const canvasHeight = ref(512);
 const started = ref(false);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
+
+const cellTypes = new CellTypes();
 
 const onClickReset = (): void => alert("Restクリックイベントよ。");
 
@@ -114,7 +117,7 @@ function renderCanvasOf(
     for (let x = 0; x < line.length; x++) {
       const value = line[x];
       if (value === 0) continue;
-      context.fillStyle = "white";
+      context.fillStyle = cellTypes.colorOf(value);
       context.fillRect(x, y, 1, 1);
     }
   }
