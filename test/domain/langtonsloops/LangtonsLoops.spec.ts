@@ -8,5 +8,15 @@ describe("LangtonsLoopsTest", () => {
         sut.langtonsLoops();
 
         expect(sut.lives.length).toEqual(64);
+        expect(sut.lives[0].length).toEqual(64);
+    });
+
+    test("世界の大きさ(size)指定で初期化が出来る。", () => {
+        const sut = new LangtonsLoops();
+
+        sut.langtonsLoops(512);
+
+        expect(sut.lives.length).toEqual(512);
+        expect(sut.lives[0].length).toEqual(512);
     });
 });
