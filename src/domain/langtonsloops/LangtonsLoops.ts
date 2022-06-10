@@ -82,6 +82,7 @@ export class LangtonsLoops {
     }
 
     public update(): void {
+        // TODO 実装手段を探す。
         // while (!this._isRuleLoaded)
         //     Task.Delay(100).GetAwaiter().GetResult();
 
