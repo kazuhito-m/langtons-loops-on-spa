@@ -39,7 +39,7 @@
           <canvas
             ref="matrixCanvas"
             :width="canvasWidth"
-            :height="canvasHegith"
+            :height="canvasHeight"
           ></canvas>
         </v-col>
       </v-row>
@@ -57,9 +57,11 @@ const displayCount = ref(0);
 const calculateCount = ref(0);
 
 const canvasWidth = ref(512);
-const canvasHegith = ref(512);
+const canvasHeight = ref(512);
 
 const started = ref(false);
+
+const matrixCanvas = ref<HTMLCanvasElement>(null);
 
 const onClickReset = (): void => alert("Restクリックイベントよ。");
 
@@ -87,15 +89,18 @@ const onClickTest = (): void => {
 };
 
 function renderCanvasOf(matrix: number[][]): void {
-  let count = 0;
-  for (let i = 0; i < matrix.length; i++) {
-    const line = matrix[i];
-    for (let j = 0; j < line.length; j++) {
-      const value = line[j];
-      if (value === 0) continue;
-      console.log(++count + ".[" + i + "," + j + "]:" + value);
-    }
-  }
+  canvasWidth.value = matrix[0].length;
+  canvasHeight.value = matrix.length;
+
+  const canvas = matrixCanvas.value;
+
+  // 念の為、Element側も更新して同期をとっておく。
+  canvas.width = canvasWidth.value;
+  canvas.height = canvasHeight.value;
+
+  const context: CanvasRenderingContext2D = canvas.getContext("2d");
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
 }
 </script>
 
