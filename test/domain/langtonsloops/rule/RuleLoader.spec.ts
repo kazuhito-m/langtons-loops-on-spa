@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { RuleLoader } from "../../../../../src/domain/langtonsloops/rule/RuleLoader";
+import { RuleLoader } from "../../../../src/domain/langtonsloops/rule/RuleLoader";
 
 describe("RuleLoaderTest", () => {
     test("読み込みが成功し期待通りのルール数が存在する。", () => {
