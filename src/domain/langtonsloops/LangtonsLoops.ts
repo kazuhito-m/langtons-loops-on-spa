@@ -40,15 +40,15 @@ export class LangtonsLoops {
 
     private prepare(size: number): void {
         this._size = size;
-        this.LoadRule();
-        this.CreateLives();
-        this.PrepareWatchingArray();
+        this.loadRule();
+        this.createLives();
+        this.prepareWatchingArray();
     }
 
     /**
      * Lives配列を作成し、初期状態を設定する。
      */
-    private CreateLives(): void {
+    private createLives(): void {
         const defaultLives = LangtonsLoops.DEFAULT_LIVES;
         const size = this._size;
 
@@ -68,7 +68,7 @@ export class LangtonsLoops {
     /**
      * 観測用の配列を生成。
      */
-    private PrepareWatchingArray(): void {
+    private prepareWatchingArray(): void {
         const size = this._size;
         this._northLife = this.initializeArray(size, size);
         this._eastLife = this.initializeArray(size, size);
@@ -76,7 +76,7 @@ export class LangtonsLoops {
         this._westLife = this.initializeArray(size, size);
     }
 
-    private LoadRule(): void {
+    private loadRule(): void {
         this._rule = RuleLoader.load();
         this._isRuleLoaded = true;
     }
