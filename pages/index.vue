@@ -1,5 +1,5 @@
 <template>
   <v-container>
-      <MainMatrixConsole/>
+      <MatrixConsole/>
   </v-container>
 </template>

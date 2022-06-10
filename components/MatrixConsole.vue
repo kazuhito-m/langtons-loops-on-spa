@@ -85,22 +85,40 @@ const onClickStop = (): void => {
 const onClickTest = (): void => {
   const langtonsLoops = new LangtonsLoops();
   langtonsLoops.langtonsLoops(300);
-  renderCanvasOf(langtonsLoops.lives);
+  const context = initialRenderCanvasOf(langtonsLoops.lives);
+  for (let i = 0; i < 250; i++) {
+    langtonsLoops.update();
+    // renderCanvasOf(langtonsLoops.lives, context);
+  }
+  renderCanvasOf(langtonsLoops.lives, context);
 };
 
-function renderCanvasOf(matrix: number[][]): void {
-  canvasWidth.value = matrix[0].length;
-  canvasHeight.value = matrix.length;
-
+function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
-
-  // 念の為、Element側も更新して同期をとっておく。
-  canvas.width = canvasWidth.value;
-  canvas.height = canvasHeight.value;
-
+  canvas.width = matrix[0].length;
+  canvas.height = matrix.length;
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  renderCanvasOf(matrix, context);
+
+  return context;
+}
+
+function renderCanvasOf(
+  matrix: number[][],
+  context: CanvasRenderingContext2D
+): void {
+  context.clearRect(0, 0, matrix[0].length, matrix.length);
+  context.beginPath();
+  for (let y = 0; y < matrix.length; y++) {
+    const line = matrix[y];
+    for (let x = 0; x < line.length; x++) {
+      const value = line[x];
+      if (value === 0) continue;
+      context.fillStyle = "white";
+      context.fillRect(x, y, 1, 1);
+    }
+  }
 }
 </script>
 
