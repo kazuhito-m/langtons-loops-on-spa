@@ -8,6 +8,12 @@ export class LangtonsLoops {
     private _rule: Rule;  // セル・オートマトンの規則
     private _isRuleLoaded: boolean;
 
+    // 観測結果(各方向の隣のセルの値)
+    private _northLife: number[][];
+    private _eastLife: number[][];
+    private _southLife: number[][];
+    private _westLife: number[][];
+
     private static readonly DEFAULT_LIVES = [
         [0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0],
         [2, 1, 7, 0, 1, 4, 0, 1, 4, 2, 0, 0, 0, 0, 0],
@@ -20,12 +26,6 @@ export class LangtonsLoops {
         [2, 0, 7, 1, 0, 7, 1, 0, 7, 1, 1, 1, 1, 1, 2],
         [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
     ];
-
-    // 観測結果(各方向の隣のセルの値)
-    private _northLife: number[][];
-    private _eastLife: number[][];
-    private _southLife: number[][];
-    private _westLife: number[][];
 
     public get lives() {
         return this._lives;
