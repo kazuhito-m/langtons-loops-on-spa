@@ -86,8 +86,7 @@ const onClickStop = (): void => {
 };
 
 const onClickTest = (): void => {
-  const langtonsLoops = new LangtonsLoops();
-  langtonsLoops.langtonsLoops(300);
+  const langtonsLoops = LangtonsLoops.of(300);
   const context = initialRenderCanvasOf(langtonsLoops.lives);
   for (let i = 0; i < 1000; i++) {
     langtonsLoops.update();

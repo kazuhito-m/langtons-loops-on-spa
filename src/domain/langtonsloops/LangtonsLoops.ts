@@ -120,4 +120,10 @@ export class LangtonsLoops {
             result[i] = new Array(r).fill(0);
         return result;
     }
+
+    public static of(size: number): LangtonsLoops {
+        const result = new LangtonsLoops();
+        result.langtonsLoops(size);
+        return result;
+    }
 }
