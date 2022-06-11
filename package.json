@@ -4,7 +4,6 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "generate:gh-pages": "NUXT_APP_BASE_URL=/langtons-loops-on-spa/ nuxt generate",
     "preview": "nuxt preview",
     "test": "vitest"
   },
