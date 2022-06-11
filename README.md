@@ -1,6 +1,8 @@
 Langtons Loops on SPA.
 ==========================
 
+[![ci](https://github.com/kazuhito-m/langtons-loops-on-spa/actions/workflows/ci.yml/badge.svg)](https://github.com/kazuhito-m/langtons-loops-on-spa/actions/workflows/ci.yml) [![gh-pages-deploy](https://github.com/kazuhito-m/langtons-loops-on-spa/actions/workflows/deploy.yml/badge.svg)](https://github.com/kazuhito-m/langtons-loops-on-spa/actions/workflows/deploy.yml)
+
 ## What's this ?
 
 セルラオートマトン「ラングトンのループ」をSPA(Single Page Application)として実装したもの。
