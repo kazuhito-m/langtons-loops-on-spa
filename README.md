@@ -16,6 +16,10 @@ npm run dev
 
 <http://localhost:3000> にて画面を確認。
 
+## Deploid Service
+
+<https://github.com/kazuhito-m/langtons-loops-on-spa> (main branch)
+
 ## author
 
 Kazuhito Miura ( [@kazuhito_m](https://twitter.com/kazuhito_m "kazuhito_m on Twitter") )
