@@ -20,7 +20,7 @@ npm run dev
 
 ## Deploid Service
 
-<https://github.com/kazuhito-m/langtons-loops-on-spa> (main branch)
+<https://kazuhito-m.github.io/langtons-loops-on-spa> (main branch)
 
 ## author
 
