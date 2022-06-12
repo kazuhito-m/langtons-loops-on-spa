@@ -3,20 +3,25 @@
     <v-container>
       <v-row dense no-gutters>
         <v-col>
-          <v-card-text> リサイクルタイム: {{ cycleTime }} 秒 </v-card-text>
+          <v-card-text>
+            リサイクルタイム:
+            <div>
+              {{ cycleTime }} 秒 (開始からの総実行時間: {{ totalTime }} 秒)
+            </div>
+          </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
-            <div v-if="calculateCount > 0">
+            <div v-if="displayCount > 0">
               {{ drawingRate }}% ({{ displayCount }}/{{ calculateCount }})
             </div>
-            <div v-if="calculateCount <= 0">-</div>
+            <div v-if="displayCount <= 0">-</div>
           </v-card-text>
           <v-card-actions>
             <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
             <v-btn
               color="primary"
               outlined
-              v-if="!started"
+              v-if="!isRunning"
               @click="onClickStart"
             >
               START
@@ -24,7 +29,7 @@
             <v-btn
               color="secondary"
               outlined
-              v-if="started"
+              v-if="isRunning"
               @click="onClickStop"
             >
               STOP
@@ -49,9 +54,11 @@ import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
 const cycleTime = ref("-");
+const totalTime = ref("-");
 const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
+const totalElpasedMs = ref(0);
 
 const canvasOneSideSize = ref(512);
 const maxExecuteCount = ref(5000);
@@ -61,8 +68,11 @@ const matrixCanvas = ref<HTMLCanvasElement>(null);
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
-const started = ref(false);
-let totalElpasedMs = 0;
+const isRunning = ref(false);
+
+watch(displayCount, renderDrawingRate);
+
+watch(totalElpasedMs, renderCycleTime);
 
 const onClickReset = (): void => resetLangtonsLoops();
 
@@ -71,43 +81,46 @@ const onClickStart = (): void => doLangtonsLoops();
 const onClickStop = (): void => stopLangtonsLoops();
 
 function doLangtonsLoops() {
-  started.value = true;
+  isRunning.value = true;
 
-  const context = initialRenderCanvasOf(langtonsLoops.lives);
+  initialRenderCanvasOf(langtonsLoops.lives);
 
   const timer = setInterval(() => {
-    const startTime = Date.now();
+    withMeasure(() => {
+      langtonsLoops.update();
+      calculateCount.value++;
 
-    langtonsLoops.update();
-    calculateCount.value++;
-
-    renderCanvasOf(langtonsLoops.lives, context);
-    displayCount.value++;
-
-    const endTime = Date.now();
-    const elapsedMs = endTime - startTime;
-    totalElpasedMs += elapsedMs;
-    const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
-    const formatedCycleTime = Number(
-      cycleTimeSeconds.toFixed(3)
-    ).toLocaleString();
-    cycleTime.value = formatedCycleTime;
-
-    const rate = (displayCount.value / calculateCount.value) * 100;
-    drawingRate.value = Number(rate.toFixed(0));
+      initialRenderCanvasOf(langtonsLoops.lives);
+      displayCount.value++;
+    });
 
     if (calculateCount.value >= maxExecuteCount.value) {
+      isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
-      clearInterval(timer);
     }
-    if (!started.value) clearInterval(timer);
+    if (!isRunning.value) clearInterval(timer);
   }, 1);
+}
+
+function stopLangtonsLoops() {
+  isRunning.value = false;
+}
+
+function resetLangtonsLoops() {
+  drawingRate.value = 0;
+  calculateCount.value = 1;
+  displayCount.value = 0;
+  totalElpasedMs.value = 0;
+  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
+  initialRenderCanvasOf(langtonsLoops.lives);
 }
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
-  canvas.width = matrix[0].length;
-  canvas.height = matrix.length;
+  if (canvas.height !== matrix.length) {
+    canvas.width = matrix[0].length;
+    canvas.height = matrix.length;
+  }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
   renderCanvasOf(matrix, context);
@@ -132,18 +145,30 @@ function renderCanvasOf(
   }
 }
 
-function stopLangtonsLoops() {
-  started.value = false;
+function withMeasure(actions: () => void): void {
+  const startTime = Date.now();
+
+  actions();
+
+  const endTime = Date.now();
+  const elapsedMs = endTime - startTime;
+
+  totalElpasedMs.value += elapsedMs;
 }
 
-function resetLangtonsLoops() {
-  cycleTime.value = "-";
-  drawingRate.value = 0;
-  displayCount.value = 0;
-  calculateCount.value = 0;
-  totalElpasedMs = 0;
-  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  initialRenderCanvasOf(langtonsLoops.lives);
+function renderCycleTime(): void {
+  const cycleTimeSeconds = totalElpasedMs.value / calculateCount.value / 1000;
+  cycleTime.value = formatNumberOf(cycleTimeSeconds, 3);
+  totalTime.value = formatNumberOf(totalElpasedMs.value / 1000, 3);
+}
+
+function renderDrawingRate(): void {
+  const rate = (displayCount.value / calculateCount.value) * 100;
+  drawingRate.value = Number(rate.toFixed(0));
+}
+
+function formatNumberOf(value: number, fractionDigits = 0) {
+  return Number(value.toFixed(fractionDigits)).toLocaleString();
 }
 </script>
 
