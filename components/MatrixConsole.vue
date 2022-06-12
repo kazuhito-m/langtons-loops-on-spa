@@ -3,7 +3,10 @@
     <v-container>
       <v-row dense no-gutters>
         <v-col>
-          <v-card-text> リサイクルタイム: {{ cycleTime }} 秒 </v-card-text>
+          <v-card-text>
+            リサイクルタイム:
+            <div>{{ cycleTime }} 秒 {{ cycleOptionalCaption }}</div>
+          </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
             <div v-if="calculateCount > 0">
@@ -49,6 +52,7 @@ import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
 const cycleTime = ref("-");
+const cycleOptionalCaption = ref("");
 const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
@@ -84,7 +88,7 @@ function doLangtonsLoops() {
       langtonsLoops.update();
       calculateCount.value++;
 
-      renderCanvasOf(langtonsLoops.lives, context);
+      initialRenderCanvasOf(langtonsLoops.lives);
       displayCount.value++;
     });
 
@@ -102,6 +106,7 @@ function stopLangtonsLoops() {
 
 function resetLangtonsLoops() {
   cycleTime.value = "-";
+  cycleOptionalCaption.value = "";
   drawingRate.value = 0;
   displayCount.value = 0;
   calculateCount.value = 0;
@@ -154,6 +159,9 @@ function withMeasure(actions: () => void): void {
 function renderCycleTime(): void {
   const cycleTimeSeconds = totalElpasedMs.value / calculateCount.value / 1000;
   cycleTime.value = formatNumberOf(cycleTimeSeconds, 3);
+
+  const totalSeconds = formatNumberOf(totalElpasedMs.value / 1000, 3);
+  cycleOptionalCaption.value = `(開始からの総実行時間: ${totalSeconds} 秒)`;
 }
 
 function renderDrawingRate(): void {
