@@ -3,10 +3,7 @@
     <v-container>
       <v-row dense no-gutters>
         <v-col>
-          <v-card-text>
-            リサイクルタイム:
-            <div>{{ recycleTimeSec }} 秒</div>
-          </v-card-text>
+          <v-card-text> リサイクルタイム: {{ cycleTime }} 秒 </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
             <div v-if="calculateCount > 0">
@@ -51,7 +48,7 @@ import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
-const recycleTimeSec = ref(0);
+const cycleTime = ref("-");
 const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
@@ -65,7 +62,7 @@ const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
 const started = ref(false);
-let count = 0;
+let totalElpasedMs = 0;
 
 const onClickReset = (): void => resetLangtonsLoops();
 
@@ -79,12 +76,27 @@ function doLangtonsLoops() {
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
   const timer = setInterval(() => {
+    const startTime = Date.now();
+
     langtonsLoops.update();
+    calculateCount.value++;
 
     renderCanvasOf(langtonsLoops.lives, context);
+    displayCount.value++;
 
-    if (count % 100 === 0) console.log("実行回数:", count);
-    if (count++ > maxExecuteCount.value) {
+    const endTime = Date.now();
+    const elapsedMs = endTime - startTime;
+    totalElpasedMs += elapsedMs;
+    const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
+    const formatedCycleTime = Number(
+      cycleTimeSeconds.toFixed(3)
+    ).toLocaleString();
+    cycleTime.value = formatedCycleTime;
+
+    const rate = (displayCount.value / calculateCount.value) * 100;
+    drawingRate.value = Number(rate.toFixed(0));
+
+    if (calculateCount.value >= maxExecuteCount.value) {
       alert("指定した計算回数に達しました。終了します。");
       clearInterval(timer);
     }
@@ -125,8 +137,13 @@ function stopLangtonsLoops() {
 }
 
 function resetLangtonsLoops() {
-  count = 0;
+  cycleTime.value = "-";
+  drawingRate.value = 0;
+  displayCount.value = 0;
+  calculateCount.value = 0;
+  totalElpasedMs = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
+  initialRenderCanvasOf(langtonsLoops.lives);
 }
 </script>
 
