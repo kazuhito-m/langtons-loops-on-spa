@@ -88,10 +88,19 @@ const onClickStop = (): void => {
 const onClickTest = (): void => {
   const langtonsLoops = LangtonsLoops.of(300);
   const context = initialRenderCanvasOf(langtonsLoops.lives);
-  for (let i = 0; i < 1000; i++) {
+
+  let i = 0;
+  const timer = setInterval(() => {
     langtonsLoops.update();
     renderCanvasOf(langtonsLoops.lives, context);
-  }
+    if (i % 1000 === 0) console.log("実行回数:", i);
+    if (i++ > 10000) {
+      alert("終了です。");
+      clearInterval(timer);
+    }
+  }, 1);
+
+  console.log("test");
 };
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
