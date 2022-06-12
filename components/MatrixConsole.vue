@@ -83,7 +83,7 @@ const onClickStop = (): void => stopLangtonsLoops();
 function doLangtonsLoops() {
   isRunning.value = true;
 
-  const context = initialRenderCanvasOf(langtonsLoops.lives);
+  initialRenderCanvasOf(langtonsLoops.lives);
 
   const timer = setInterval(() => {
     withMeasure(() => {
