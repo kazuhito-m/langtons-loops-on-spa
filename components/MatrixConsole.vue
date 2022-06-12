@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
@@ -57,13 +57,15 @@ const displayCount = ref(0);
 const calculateCount = ref(0);
 
 const canvasOneSideSize = ref(512);
-
-const started = ref(false);
+const maxExecuteCount = ref(5000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
+
+const started = ref(false);
+let count = 0;
 
 const onClickReset = (): void => resetLangtonsLoops();
 
@@ -76,15 +78,14 @@ function doLangtonsLoops() {
 
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
-  let count = 0;
   const timer = setInterval(() => {
     langtonsLoops.update();
 
     renderCanvasOf(langtonsLoops.lives, context);
 
     if (count % 100 === 0) console.log("実行回数:", count);
-    if (count++ > 5000) {
-      alert("終了です。");
+    if (count++ > maxExecuteCount.value) {
+      alert("指定した計算回数に達しました。終了します。");
       clearInterval(timer);
     }
     if (!started.value) clearInterval(timer);
@@ -124,6 +125,7 @@ function stopLangtonsLoops() {
 }
 
 function resetLangtonsLoops() {
+  count = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
 }
 </script>
