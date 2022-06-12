@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick } from "vue";
+import { ref, nextTick } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
