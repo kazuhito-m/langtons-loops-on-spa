@@ -70,8 +70,6 @@ const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
 
-watch(calculateCount, renderLives);
-
 watch(displayCount, renderDrawingRate);
 
 watch(totalElpasedMs, renderCycleTime);
@@ -87,7 +85,7 @@ function doLangtonsLoops() {
 
   initialRenderCanvasOf(langtonsLoops.lives);
 
-  const timer = setInterval(() => {
+  const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
       langtonsLoops.update();
       calculateCount.value++;
@@ -97,8 +95,13 @@ function doLangtonsLoops() {
       isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
     }
-    if (!isRunning.value) clearInterval(timer);
+    if (!isRunning.value) clearInterval(calculateLoopTimer);
   }, 1);
+
+  const rendaringLoopTimer = setInterval(() => {
+    renderLives();
+    if (!isRunning.value) clearInterval(rendaringLoopTimer);
+  }, 100);
 }
 
 function stopLangtonsLoops() {
@@ -175,7 +178,6 @@ function renderLives(): void {
   initialRenderCanvasOf(langtonsLoops.lives);
 
   displayCount.value++;
-
   drawingLock = false;
 }
 
