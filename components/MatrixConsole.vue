@@ -70,6 +70,8 @@ const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
 
+watch(calculateCount, renderLives);
+
 watch(displayCount, renderDrawingRate);
 
 watch(totalElpasedMs, renderCycleTime);
@@ -89,9 +91,6 @@ function doLangtonsLoops() {
     withMeasure(() => {
       langtonsLoops.update();
       calculateCount.value++;
-
-      initialRenderCanvasOf(langtonsLoops.lives);
-      displayCount.value++;
     });
 
     if (calculateCount.value >= maxExecuteCount.value) {
@@ -165,6 +164,19 @@ function renderCycleTime(): void {
 function renderDrawingRate(): void {
   const rate = (displayCount.value / calculateCount.value) * 100;
   drawingRate.value = Number(rate.toFixed(0));
+}
+
+let drawingLock = false;
+
+function renderLives(): void {
+  if (drawingLock) return;
+  drawingLock = true;
+
+  initialRenderCanvasOf(langtonsLoops.lives);
+
+  displayCount.value++;
+
+  drawingLock = false;
 }
 
 function formatNumberOf(value: number, fractionDigits = 0) {
