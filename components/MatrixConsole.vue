@@ -11,10 +11,10 @@
           </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
-            <div v-if="calculateCount > 0">
+            <div v-if="displayCount > 0">
               {{ drawingRate }}% ({{ displayCount }}/{{ calculateCount }})
             </div>
-            <div v-if="calculateCount <= 0">-</div>
+            <div v-if="displayCount <= 0">-</div>
           </v-card-text>
           <v-card-actions>
             <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
@@ -107,11 +107,9 @@ function stopLangtonsLoops() {
 }
 
 function resetLangtonsLoops() {
-  cycleTime.value = "-";
-  totalTime.value = "-";
   drawingRate.value = 0;
+  calculateCount.value = 1;
   displayCount.value = 0;
-  calculateCount.value = 0;
   totalElpasedMs.value = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
   initialRenderCanvasOf(langtonsLoops.lives);
