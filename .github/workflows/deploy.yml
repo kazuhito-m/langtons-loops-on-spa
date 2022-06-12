@@ -36,7 +36,7 @@ jobs:
         run: npm ci --prefer-offline --no-audit
 
       - name: Build
-        run: npm run generate
+        run: NUXT_APP_BASE_URL=/langtons-loops-on-spa/ npm run generate
 
       - name: Deploy for gh-pages
         uses: peaceiris/actions-gh-pages@v3
