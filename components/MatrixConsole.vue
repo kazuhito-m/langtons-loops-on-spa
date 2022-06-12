@@ -144,13 +144,14 @@ function withMeasure(actions: () => void): void {
 
   totalElpasedMs += elapsedMs;
   const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
-  const formatedCycleTime = Number(
-    cycleTimeSeconds.toFixed(3)
-  ).toLocaleString();
-  cycleTime.value = formatedCycleTime;
+  cycleTime.value = formatNumberOf(cycleTimeSeconds, 3);
 
   const rate = (displayCount.value / calculateCount.value) * 100;
   drawingRate.value = Number(rate.toFixed(0));
+}
+
+function formatNumberOf(value: number, fractionDigits = 0) {
+  return Number(value.toFixed(fractionDigits)).toLocaleString();
 }
 </script>
 
