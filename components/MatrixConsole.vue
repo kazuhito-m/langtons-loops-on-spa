@@ -63,6 +63,7 @@ const started = ref(false);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 
+const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
 const onClickReset = (): void => alert("Restクリックイベントよ。");
@@ -85,21 +86,18 @@ const onClickStop = (): void => {
 };
 
 const onClickTest = (): void => {
-  const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
-  let i = 0;
+  let count = 0;
   const timer = setInterval(() => {
     langtonsLoops.update();
     renderCanvasOf(langtonsLoops.lives, context);
-    if (i % 100 === 0) console.log("実行回数:", i);
-    if (i++ > 5000) {
+    if (count % 100 === 0) console.log("実行回数:", count);
+    if (count++ > 5000) {
       alert("終了です。");
       clearInterval(timer);
     }
   }, 1);
-
-  console.log("test");
 };
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
