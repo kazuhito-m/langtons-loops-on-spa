@@ -32,13 +32,12 @@
             >
               STOP
             </v-btn>
-            <v-btn color="red" outlined @click="onClickTest"> TEST </v-btn>
           </v-card-actions>
         </v-col>
         <v-col>
           <canvas
             ref="matrixCanvas"
-            :width="canvasOneSideSize~"
+            :width="canvasOneSideSize"
             :height="canvasOneSideSize"
           ></canvas>
         </v-col>
@@ -66,39 +65,31 @@ const matrixCanvas = ref<HTMLCanvasElement>(null);
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
-const onClickReset = (): void => alert("Restクリックイベントよ。");
+const onClickReset = (): void => resetLangtonsLoops();
 
-const onClickStart = (): void => {
+const onClickStart = (): void => doLangtonsLoops();
+
+const onClickStop = (): void => stopLangtonsLoops();
+
+function doLangtonsLoops() {
   started.value = true;
-  nextTick(() => {
-    setTimeout(() => {
-      for (let i = 0; i < 100000; i++) {
-        console.log(i);
-        if (!started.value) break;
-      }
-      started.value = false;
-    }, 10);
-  });
-};
 
-const onClickStop = (): void => {
-  started.value = false;
-};
-
-const onClickTest = (): void => {
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
   let count = 0;
   const timer = setInterval(() => {
     langtonsLoops.update();
+
     renderCanvasOf(langtonsLoops.lives, context);
+
     if (count % 100 === 0) console.log("実行回数:", count);
     if (count++ > 5000) {
       alert("終了です。");
       clearInterval(timer);
     }
+    if (!started.value) clearInterval(timer);
   }, 1);
-};
+}
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
@@ -126,6 +117,14 @@ function renderCanvasOf(
       context.fillRect(x, y, 1, 1);
     }
   }
+}
+
+function stopLangtonsLoops() {
+  started.value = false;
+}
+
+function resetLangtonsLoops() {
+  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
 }
 </script>
 
