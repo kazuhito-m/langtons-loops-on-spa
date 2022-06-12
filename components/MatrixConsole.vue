@@ -92,6 +92,20 @@ function doLangtonsLoops() {
   }, 1);
 }
 
+function stopLangtonsLoops() {
+  isRunning.value = false;
+}
+
+function resetLangtonsLoops() {
+  cycleTime.value = "-";
+  drawingRate.value = 0;
+  displayCount.value = 0;
+  calculateCount.value = 0;
+  totalElpasedMs = 0;
+  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
+  initialRenderCanvasOf(langtonsLoops.lives);
+}
+
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
   canvas.width = matrix[0].length;
@@ -137,20 +151,6 @@ function withMeasure(actions: () => void): void {
 
   const rate = (displayCount.value / calculateCount.value) * 100;
   drawingRate.value = Number(rate.toFixed(0));
-}
-
-function stopLangtonsLoops() {
-  isRunning.value = false;
-}
-
-function resetLangtonsLoops() {
-  cycleTime.value = "-";
-  drawingRate.value = 0;
-  displayCount.value = 0;
-  calculateCount.value = 0;
-  totalElpasedMs = 0;
-  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  initialRenderCanvasOf(langtonsLoops.lives);
 }
 </script>
 
