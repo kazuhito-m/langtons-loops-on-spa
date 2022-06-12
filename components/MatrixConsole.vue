@@ -76,25 +76,13 @@ function doLangtonsLoops() {
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
   const timer = setInterval(() => {
-    const startTime = Date.now();
+    withMeasure(() => {
+      langtonsLoops.update();
+      calculateCount.value++;
 
-    langtonsLoops.update();
-    calculateCount.value++;
-
-    renderCanvasOf(langtonsLoops.lives, context);
-    displayCount.value++;
-
-    const endTime = Date.now();
-    const elapsedMs = endTime - startTime;
-    totalElpasedMs += elapsedMs;
-    const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
-    const formatedCycleTime = Number(
-      cycleTimeSeconds.toFixed(3)
-    ).toLocaleString();
-    cycleTime.value = formatedCycleTime;
-
-    const rate = (displayCount.value / calculateCount.value) * 100;
-    drawingRate.value = Number(rate.toFixed(0));
+      renderCanvasOf(langtonsLoops.lives, context);
+      displayCount.value++;
+    });
 
     if (calculateCount.value >= maxExecuteCount.value) {
       alert("指定した計算回数に達しました。終了します。");
@@ -130,6 +118,25 @@ function renderCanvasOf(
       context.fillRect(x, y, 1, 1);
     }
   }
+}
+
+function withMeasure(lambda: () => void): void {
+  const startTime = Date.now();
+
+  lambda();
+
+  const endTime = Date.now();
+  const elapsedMs = endTime - startTime;
+
+  totalElpasedMs += elapsedMs;
+  const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
+  const formatedCycleTime = Number(
+    cycleTimeSeconds.toFixed(3)
+  ).toLocaleString();
+  cycleTime.value = formatedCycleTime;
+
+  const rate = (displayCount.value / calculateCount.value) * 100;
+  drawingRate.value = Number(rate.toFixed(0));
 }
 
 function stopLangtonsLoops() {
