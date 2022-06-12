@@ -120,10 +120,10 @@ function renderCanvasOf(
   }
 }
 
-function withMeasure(lambda: () => void): void {
+function withMeasure(actions: () => void): void {
   const startTime = Date.now();
 
-  lambda();
+  actions();
 
   const endTime = Date.now();
   const elapsedMs = endTime - startTime;
