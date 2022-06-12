@@ -112,8 +112,10 @@ function resetLangtonsLoops() {
 
 function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
-  canvas.width = matrix[0].length;
-  canvas.height = matrix.length;
+  if (canvas.height !== matrix.length) {
+    canvas.width = matrix[0].length;
+    canvas.height = matrix.length;
+  }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
   renderCanvasOf(matrix, context);
