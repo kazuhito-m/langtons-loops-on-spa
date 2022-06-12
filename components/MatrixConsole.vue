@@ -38,8 +38,8 @@
         <v-col>
           <canvas
             ref="matrixCanvas"
-            :width="canvasWidth"
-            :height="canvasHeight"
+            :width="canvasOneSideSize~"
+            :height="canvasOneSideSize"
           ></canvas>
         </v-col>
       </v-row>
@@ -57,8 +57,7 @@ const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
 
-const canvasWidth = ref(512);
-const canvasHeight = ref(512);
+const canvasOneSideSize = ref(512);
 
 const started = ref(false);
 
@@ -86,7 +85,7 @@ const onClickStop = (): void => {
 };
 
 const onClickTest = (): void => {
-  const langtonsLoops = LangtonsLoops.of(300);
+  const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
   let i = 0;
