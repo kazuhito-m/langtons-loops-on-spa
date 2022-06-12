@@ -93,8 +93,8 @@ const onClickTest = (): void => {
   const timer = setInterval(() => {
     langtonsLoops.update();
     renderCanvasOf(langtonsLoops.lives, context);
-    if (i % 1000 === 0) console.log("実行回数:", i);
-    if (i++ > 10000) {
+    if (i % 100 === 0) console.log("実行回数:", i);
+    if (i++ > 5000) {
       alert("終了です。");
       clearInterval(timer);
     }
