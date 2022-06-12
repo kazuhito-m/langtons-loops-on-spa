@@ -95,8 +95,8 @@ function doLangtonsLoops() {
     });
 
     if (calculateCount.value >= maxExecuteCount.value) {
+      isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
-      clearInterval(timer);
     }
     if (!isRunning.value) clearInterval(timer);
   }, 1);
