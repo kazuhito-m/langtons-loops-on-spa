@@ -16,7 +16,7 @@
             <v-btn
               color="primary"
               outlined
-              v-if="!started"
+              v-if="!isRunning"
               @click="onClickStart"
             >
               START
@@ -24,7 +24,7 @@
             <v-btn
               color="secondary"
               outlined
-              v-if="started"
+              v-if="isRunning"
               @click="onClickStop"
             >
               STOP
@@ -61,7 +61,7 @@ const matrixCanvas = ref<HTMLCanvasElement>(null);
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
-const started = ref(false);
+const isRunning = ref(false);
 let totalElpasedMs = 0;
 
 const onClickReset = (): void => resetLangtonsLoops();
@@ -71,7 +71,7 @@ const onClickStart = (): void => doLangtonsLoops();
 const onClickStop = (): void => stopLangtonsLoops();
 
 function doLangtonsLoops() {
-  started.value = true;
+  isRunning.value = true;
 
   const context = initialRenderCanvasOf(langtonsLoops.lives);
 
@@ -88,7 +88,7 @@ function doLangtonsLoops() {
       alert("指定した計算回数に達しました。終了します。");
       clearInterval(timer);
     }
-    if (!started.value) clearInterval(timer);
+    if (!isRunning.value) clearInterval(timer);
   }, 1);
 }
 
@@ -140,7 +140,7 @@ function withMeasure(lambda: () => void): void {
 }
 
 function stopLangtonsLoops() {
-  started.value = false;
+  isRunning.value = false;
 }
 
 function resetLangtonsLoops() {
