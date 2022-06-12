@@ -52,9 +52,10 @@ const cycleTime = ref("-");
 const drawingRate = ref(0);
 const displayCount = ref(0);
 const calculateCount = ref(0);
+const totalElpasedMs = ref(0);
 
 const canvasOneSideSize = ref(512);
-const maxExecuteCount = ref(5000);
+const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 
@@ -62,7 +63,10 @@ const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
-let totalElpasedMs = 0;
+
+watch(displayCount, renderDrawingRate);
+
+watch(totalElpasedMs, renderCycleTime);
 
 const onClickReset = (): void => resetLangtonsLoops();
 
@@ -101,7 +105,7 @@ function resetLangtonsLoops() {
   drawingRate.value = 0;
   displayCount.value = 0;
   calculateCount.value = 0;
-  totalElpasedMs = 0;
+  totalElpasedMs.value = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
   initialRenderCanvasOf(langtonsLoops.lives);
 }
@@ -142,10 +146,15 @@ function withMeasure(actions: () => void): void {
   const endTime = Date.now();
   const elapsedMs = endTime - startTime;
 
-  totalElpasedMs += elapsedMs;
-  const cycleTimeSeconds = totalElpasedMs / calculateCount.value / 1000;
-  cycleTime.value = formatNumberOf(cycleTimeSeconds, 3);
+  totalElpasedMs.value += elapsedMs;
+}
 
+function renderCycleTime(): void {
+  const cycleTimeSeconds = totalElpasedMs.value / calculateCount.value / 1000;
+  cycleTime.value = formatNumberOf(cycleTimeSeconds, 3);
+}
+
+function renderDrawingRate(): void {
   const rate = (displayCount.value / calculateCount.value) * 100;
   drawingRate.value = Number(rate.toFixed(0));
 }
