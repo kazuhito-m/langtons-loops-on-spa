@@ -61,7 +61,7 @@ const calculateCount = ref(0);
 const totalElpasedMs = ref(0);
 
 const canvasOneSideSize = ref(512);
-const maxExecuteCount = ref(5000);
+const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 
@@ -85,21 +85,23 @@ function doLangtonsLoops() {
 
   initialRenderCanvasOf(langtonsLoops.lives);
 
-  const timer = setInterval(() => {
+  const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
       langtonsLoops.update();
       calculateCount.value++;
-
-      initialRenderCanvasOf(langtonsLoops.lives);
-      displayCount.value++;
     });
 
     if (calculateCount.value >= maxExecuteCount.value) {
       isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
     }
-    if (!isRunning.value) clearInterval(timer);
+    if (!isRunning.value) clearInterval(calculateLoopTimer);
   }, 1);
+
+  const rendaringLoopTimer = setInterval(() => {
+    renderLives();
+    if (!isRunning.value) clearInterval(rendaringLoopTimer);
+  }, 200);
 }
 
 function stopLangtonsLoops() {
@@ -165,6 +167,18 @@ function renderCycleTime(): void {
 function renderDrawingRate(): void {
   const rate = (displayCount.value / calculateCount.value) * 100;
   drawingRate.value = Number(rate.toFixed(0));
+}
+
+let drawingLock = false;
+
+function renderLives(): void {
+  if (drawingLock) return;
+  drawingLock = true;
+
+  initialRenderCanvasOf(langtonsLoops.lives);
+
+  displayCount.value++;
+  drawingLock = false;
 }
 
 function formatNumberOf(value: number, fractionDigits = 0) {
