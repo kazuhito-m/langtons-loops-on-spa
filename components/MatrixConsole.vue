@@ -49,9 +49,10 @@
           <v-card-actions>
             <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
             <v-btn
-              color="primary"
+              :color="isDisableStart() ? 'disable' : 'primary'"
               outlined
               v-if="!isRunning"
+              :disabled="isDisableStart()"
               @click="onClickStart"
             >
               START
@@ -123,7 +124,7 @@ function doLangtonsLoops() {
       calculateCount.value++;
     });
 
-    if (calculateCount.value >= maxExecuteCount.value) {
+    if (isOverLimit()) {
       isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
     }
@@ -212,6 +213,11 @@ function renderLives(): void {
   displayCount.value++;
   drawingLock = false;
 }
+
+const isOverLimit = () =>
+  !isInfiniteOfLimitCount() && calculateCount.value >= maxExecuteCount.value;
+
+const isDisableStart = () => isOverLimit();
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
