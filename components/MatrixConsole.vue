@@ -11,10 +11,10 @@
           </v-card-text>
           <v-card-text>
             描画率(表示回数/計算回数):
-            <div v-if="displayCount > 0">
+            <div v-if="!isStatusOfReseted()">
               {{ drawingRate }}% ({{ displayCount }}/{{ calculateCount }})
             </div>
-            <div v-if="displayCount <= 0">-</div>
+            <div v-if="isStatusOfReseted()">-</div>
           </v-card-text>
           <v-card-text>
             <v-container fluid>
@@ -22,7 +22,7 @@
                 <v-col>
                   <v-text-field
                     v-model="canvasOneSideSize"
-                    :disabled="isRunning || calculateCount > 1"
+                    :disabled="isRunning || !isStatusOfReseted()"
                     @keypress="numberOnlyKeyPressFilter"
                     label="世界の大きさ(CanvasSize)※RESETで反映"
                     :rules="[validateCanvasOneSideSizeOf]"
@@ -136,7 +136,7 @@ const isInfiniteOfLimitCount = () => limitCountBehavior.value.isInfinite();
 function doLangtonsLoops() {
   isRunning.value = true;
 
-  if (calculateCount.value === 0) resetLangtonsLoops();
+  if (isStatusOfReseted()) resetLangtonsLoops();
 
   renderCanvasWithResizeOf(langtonsLoops.lives);
 
@@ -266,6 +266,8 @@ const validateCanvasOneSideSizeOf = (value: any): any => {
     return `${LangtonsLoops.MIN_SIZE} から ${LangtonsLoops.MAX_SIZE} の範囲で入力してください。`;
   return true;
 };
+
+const isStatusOfReseted = () => displayCount.value <= 0;
 </script>
 
 <style scoped>
