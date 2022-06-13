@@ -19,12 +19,13 @@
           <v-card-text>
             <v-container fluid>
               <v-row dense no-gutters>
-                <v-col cols="6">
+                <v-col>
                   <v-text-field
                     v-model="canvasOneSideSize"
                     :disabled="isRunning"
                     @keypress="numberOnlyKeyPressFilter"
-                    label="世界の大きさ(Canvas Size)※RESETで反映"
+                    label="世界の大きさ(CanvasSize)※RESETで反映"
+                    :rules="[validateCanvasOneSideSizeOf]"
                     counter="3"
                     maxlength="3"
                     variant="outlined"
@@ -239,7 +240,9 @@ function renderLives(): void {
 const isOverLimit = () =>
   !isInfiniteOfLimitCount() && calculateCount.value >= maxExecuteCount.value;
 
-const isDisableStart = () => isOverLimit();
+const isDisableStart = () =>
+  isOverLimit() ||
+  validateCanvasOneSideSizeOf(canvasOneSideSize.value) !== true;
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
@@ -252,6 +255,15 @@ function numberOnlyKeyPressFilter(event: KeyboardEvent): boolean {
   event.preventDefault();
   return false;
 }
+
+const validateCanvasOneSideSizeOf = (value: any): any => {
+  if (!value) return "入力してください。";
+  if (isNaN(value)) return "数値を入力してください。";
+  const size = value as number;
+  if (size < LangtonsLoops.MIN_SIZE || size > LangtonsLoops.MAX_SIZE)
+    return `${LangtonsLoops.MIN_SIZE} から ${LangtonsLoops.MAX_SIZE} の範囲で入力してください。`;
+  return true;
+};
 </script>
 
 <style scoped>

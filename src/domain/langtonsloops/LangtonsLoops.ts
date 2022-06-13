@@ -27,6 +27,9 @@ export class LangtonsLoops {
         [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
     ];
 
+    public static readonly MIN_SIZE = 64;
+    public static readonly MAX_SIZE = 999;
+
     public get lives(): number[][] {
         return this._lives;
     }
@@ -34,7 +37,7 @@ export class LangtonsLoops {
     /**
      * 省略時はデフォルトサイズ。
      */
-    public langtonsLoops(size: number = 64): void {
+    public langtonsLoops(size: number = LangtonsLoops.MIN_SIZE): void {
         this.prepare(size);
     }
 
