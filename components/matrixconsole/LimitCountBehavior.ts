@@ -31,5 +31,4 @@ export class LimitCountBehavior {
         if (!result) return LimitCountBehavior.DEFAULT;
         return result;
     }
-
 }
