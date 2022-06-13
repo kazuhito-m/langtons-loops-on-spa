@@ -136,6 +136,8 @@ const isInfiniteOfLimitCount = () => limitCountBehavior.value.isInfinite();
 function doLangtonsLoops() {
   isRunning.value = true;
 
+  if (calculateCount.value === 0) resetLangtonsLoops();
+
   renderCanvasWithResizeOf(langtonsLoops.lives);
 
   const calculateLoopTimer = setInterval(() => {
