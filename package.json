@@ -8,7 +8,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@nuxt/test-utils-edge": "^3.0.0-rc.3-27581242.8831e4a",
+    "@nuxt/test-utils-edge": "^3.0.0-rc.3-27584539.9d28c0a",
     "jsdom": "^19.0.0",
     "nuxt": "3.0.0-rc.3",
     "vitest": "^0.14.2"
