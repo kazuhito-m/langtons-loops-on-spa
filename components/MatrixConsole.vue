@@ -25,6 +25,7 @@
                     :items="limitCountBehaviors"
                     item-title="name"
                     item-value="id"
+                    :disabled="isRunning"
                     label="計算上限"
                     return-object
                     variant="outlined"
@@ -33,7 +34,7 @@
                 <v-col cols="6">
                   <v-text-field
                     v-model="maxExecuteCount"
-                    :disabled="isInfiniteOfLimitCount()"
+                    :disabled="isRunning || isInfiniteOfLimitCount()"
                     label="上限回数"
                     counter="6"
                     maxlength="6"
