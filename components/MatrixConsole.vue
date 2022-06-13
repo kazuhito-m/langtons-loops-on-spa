@@ -22,7 +22,7 @@
                 <v-col>
                   <v-text-field
                     v-model="canvasOneSideSize"
-                    :disabled="isRunning"
+                    :disabled="isRunning || calculateCount > 1"
                     @keypress="numberOnlyKeyPressFilter"
                     label="世界の大きさ(CanvasSize)※RESETで反映"
                     :rules="[validateCanvasOneSideSizeOf]"
