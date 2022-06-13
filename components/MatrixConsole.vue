@@ -16,12 +16,44 @@
             </div>
             <div v-if="displayCount <= 0">-</div>
           </v-card-text>
+          <v-card-text>
+            <v-container fluid>
+              <v-row dense no-gutters>
+                <v-col cols="6">
+                  <v-select
+                    v-model="limitCountBehavior"
+                    :items="limitCountBehaviors"
+                    item-title="name"
+                    item-value="id"
+                    :disabled="isRunning"
+                    label="計算上限"
+                    return-object
+                    variant="outlined"
+                  ></v-select>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="maxExecuteCount"
+                    :disabled="isRunning || isInfiniteOfLimitCount()"
+                    @keypress="numberOnlyKeyPressFilter"
+                    label="上限回数"
+                    counter="6"
+                    maxlength="6"
+                    variant="outlined"
+                    leng
+                    dense
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
           <v-card-actions>
             <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
             <v-btn
-              color="primary"
+              :color="isDisableStart() ? 'disable' : 'primary'"
               outlined
               v-if="!isRunning"
+              :disabled="isDisableStart()"
               @click="onClickStart"
             >
               START
@@ -52,6 +84,7 @@
 import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
+import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
 
 const cycleTime = ref("-");
 const totalTime = ref("-");
@@ -71,19 +104,20 @@ const cellTypes = new CellTypes();
 const isRunning = ref(false);
 
 watch(displayCount, renderDrawingRate);
-
 watch(totalElpasedMs, renderCycleTime);
 
 const onClickReset = (): void => resetLangtonsLoops();
-
 const onClickStart = (): void => doLangtonsLoops();
-
 const onClickStop = (): void => stopLangtonsLoops();
+
+const limitCountBehavior = ref(LimitCountBehavior.DEFAULT);
+const limitCountBehaviors = LimitCountBehavior.all();
+const isInfiniteOfLimitCount = () => limitCountBehavior.value.isInfinite();
 
 function doLangtonsLoops() {
   isRunning.value = true;
 
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 
   const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
@@ -91,7 +125,7 @@ function doLangtonsLoops() {
       calculateCount.value++;
     });
 
-    if (calculateCount.value >= maxExecuteCount.value) {
+    if (isOverLimit()) {
       isRunning.value = false;
       alert("指定した計算回数に達しました。終了します。");
     }
@@ -114,10 +148,12 @@ function resetLangtonsLoops() {
   displayCount.value = 0;
   totalElpasedMs.value = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 }
 
-function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
+function renderCanvasWithResizeOf(
+  matrix: number[][]
+): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
   if (canvas.height !== matrix.length) {
     canvas.width = matrix[0].length;
@@ -175,14 +211,27 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 
   displayCount.value++;
   drawingLock = false;
 }
 
+const isOverLimit = () =>
+  !isInfiniteOfLimitCount() && calculateCount.value >= maxExecuteCount.value;
+
+const isDisableStart = () => isOverLimit();
+
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
+}
+
+function numberOnlyKeyPressFilter(event: KeyboardEvent): boolean {
+  if ("0123456789".includes(event.key)) return true;
+
+  event.stopImmediatePropagation();
+  event.preventDefault();
+  return false;
 }
 </script>
 
