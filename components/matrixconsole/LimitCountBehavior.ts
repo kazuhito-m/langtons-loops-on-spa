@@ -16,6 +16,13 @@ export class LimitCountBehavior {
         ];
     }
 
+    public static getByIdOf(id: number): LimitCountBehavior {
+        const result = LimitCountBehavior.all()
+            .find(i => i.id === id);
+        if (!result) return LimitCountBehavior.DEFAULT;
+        return result;
+    }
+
     public isInfinite(): boolean {
         return this === LimitCountBehavior.INFINITE;
     }

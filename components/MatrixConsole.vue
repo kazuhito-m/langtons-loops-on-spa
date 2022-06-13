@@ -21,7 +21,7 @@
               <v-row dense no-gutters>
                 <v-col cols="6">
                   <v-select
-                    v-model="limitCountBehavior"
+                    v-model="limitCountBehaviorId"
                     :items="limitCountBehaviors"
                     item-title="name"
                     item-value="id"
@@ -32,7 +32,7 @@
                 <v-col cols="6">
                   <v-text-field
                     v-model="maxExecuteCount"
-                    :disabled="isInfiniteLimitCount"
+                    :disabled="isInfiniteOfLimitCount()"
                     label="上限回数"
                     counter="6"
                     maxlength="6"
@@ -106,9 +106,13 @@ const onClickReset = (): void => resetLangtonsLoops();
 const onClickStart = (): void => doLangtonsLoops();
 const onClickStop = (): void => stopLangtonsLoops();
 
-const limitCountBehavior = ref(LimitCountBehavior.DEFAULT);
+const limitCountBehaviorId = ref(LimitCountBehavior.DEFAULT.id);
 const limitCountBehaviors = LimitCountBehavior.all();
-const isInfiniteLimitCount = ():boolean => limitCountBehavior.value.isInfinite();
+const isInfiniteOfLimitCount = (): boolean => {
+  const id = limitCountBehaviorId.value;
+  const behavior = LimitCountBehavior.getByIdOf(id);
+  return behavior.isInfinite();
+};
 
 function doLangtonsLoops() {
   isRunning.value = true;
