@@ -115,9 +115,12 @@ export class LangtonsLoops {
     }
 
     private initializeArray(l: number, r: number): number[][] {
-        const result = new Array(l).fill(0);
-        for (let i = 0; i < result.length; i++)
-            result[i] = new Array(r).fill(0);
+        let result = [];
+        for (let i = 0; i < l; i++) {
+            let row = [];
+            for (let j = 0; j < r; j++) row.push(0);
+            result.push(row);
+        }
         return result;
     }
 
