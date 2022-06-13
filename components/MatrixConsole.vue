@@ -21,11 +21,12 @@
               <v-row dense no-gutters>
                 <v-col cols="6">
                   <v-select
-                    v-model="limitCountBehaviorId"
+                    v-model="limitCountBehavior"
                     :items="limitCountBehaviors"
                     item-title="name"
                     item-value="id"
                     label="計算上限"
+                    return-object
                     variant="outlined"
                   ></v-select>
                 </v-col>
@@ -106,13 +107,9 @@ const onClickReset = (): void => resetLangtonsLoops();
 const onClickStart = (): void => doLangtonsLoops();
 const onClickStop = (): void => stopLangtonsLoops();
 
-const limitCountBehaviorId = ref(LimitCountBehavior.DEFAULT.id);
+const limitCountBehavior = ref(LimitCountBehavior.DEFAULT);
 const limitCountBehaviors = LimitCountBehavior.all();
-const isInfiniteOfLimitCount = (): boolean => {
-  const id = limitCountBehaviorId.value;
-  const behavior = LimitCountBehavior.getByIdOf(id);
-  return behavior.isInfinite();
-};
+const isInfiniteOfLimitCount = () => limitCountBehavior.value.isInfinite();
 
 function doLangtonsLoops() {
   isRunning.value = true;

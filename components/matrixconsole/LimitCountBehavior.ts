@@ -9,6 +9,15 @@ export class LimitCountBehavior {
         public readonly name: string
     ) { }
 
+    public eaulas(other: LimitCountBehavior): boolean {
+        return this.id === other.id
+            && this.name === other.name;
+    }
+
+    public isInfinite(): boolean {
+        return this.eaulas(LimitCountBehavior.INFINITE);
+    }
+
     public static all(): LimitCountBehavior[] {
         return [
             LimitCountBehavior.INFINITE,
@@ -23,7 +32,4 @@ export class LimitCountBehavior {
         return result;
     }
 
-    public isInfinite(): boolean {
-        return this === LimitCountBehavior.INFINITE;
-    }
 }
