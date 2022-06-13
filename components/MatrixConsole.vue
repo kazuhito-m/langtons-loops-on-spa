@@ -117,7 +117,7 @@ const isInfiniteOfLimitCount = () => limitCountBehavior.value.isInfinite();
 function doLangtonsLoops() {
   isRunning.value = true;
 
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 
   const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
@@ -148,10 +148,12 @@ function resetLangtonsLoops() {
   displayCount.value = 0;
   totalElpasedMs.value = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 }
 
-function initialRenderCanvasOf(matrix: number[][]): CanvasRenderingContext2D {
+function renderCanvasWithResizeOf(
+  matrix: number[][]
+): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
   if (canvas.height !== matrix.length) {
     canvas.width = matrix[0].length;
@@ -209,7 +211,7 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  initialRenderCanvasOf(langtonsLoops.lives);
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 
   displayCount.value++;
   drawingLock = false;
