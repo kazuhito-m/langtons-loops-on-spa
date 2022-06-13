@@ -20,6 +20,21 @@
             <v-container fluid>
               <v-row dense no-gutters>
                 <v-col cols="6">
+                  <v-text-field
+                    v-model="canvasOneSideSize"
+                    :disabled="isRunning"
+                    @keypress="numberOnlyKeyPressFilter"
+                    label="世界の大きさ(Canvas Size)※RESETで反映"
+                    counter="3"
+                    maxlength="3"
+                    variant="outlined"
+                    leng
+                    dense
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense no-gutters>
+                <v-col cols="6">
                   <v-select
                     v-model="limitCountBehavior"
                     :items="limitCountBehaviors"
@@ -71,8 +86,8 @@
         <v-col>
           <canvas
             ref="matrixCanvas"
-            :width="canvasOneSideSize"
-            :height="canvasOneSideSize"
+            :width="canvasHtmlOutsideSize"
+            :height="canvasHtmlOutsideSize"
           ></canvas>
         </v-col>
       </v-row>
@@ -97,6 +112,7 @@ const canvasOneSideSize = ref(512);
 const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
+const canvasHtmlOutsideSize = ref(canvasOneSideSize.value);
 
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
@@ -105,6 +121,8 @@ const isRunning = ref(false);
 
 watch(displayCount, renderDrawingRate);
 watch(totalElpasedMs, renderCycleTime);
+
+const onMounted = () => resetLangtonsLoops();
 
 const onClickReset = (): void => resetLangtonsLoops();
 const onClickStart = (): void => doLangtonsLoops();
@@ -158,6 +176,7 @@ function renderCanvasWithResizeOf(
   if (canvas.height !== matrix.length) {
     canvas.width = matrix[0].length;
     canvas.height = matrix.length;
+    canvasOneSideSize.value = matrix.length;
   }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
