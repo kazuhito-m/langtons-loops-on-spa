@@ -16,6 +16,34 @@
             </div>
             <div v-if="displayCount <= 0">-</div>
           </v-card-text>
+          <v-card-text>
+            <v-container fluid>
+              <v-row dense no-gutters>
+                <v-col cols="6">
+                  <v-select
+                    v-model="limitCountBehavior"
+                    :items="limitCountBehaviors"
+                    item-title="name"
+                    item-value="id"
+                    label="計算上限"
+                    variant="outlined"
+                  ></v-select>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="maxExecuteCount"
+                    :disabled="isInfiniteLimitCount"
+                    label="上限回数"
+                    counter="6"
+                    maxlength="6"
+                    variant="outlined"
+                    leng
+                    dense
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
           <v-card-actions>
             <v-btn color="error" outlined @click="onClickReset">RESET</v-btn>
             <v-btn
@@ -52,6 +80,7 @@
 import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
+import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
 
 const cycleTime = ref("-");
 const totalTime = ref("-");
@@ -71,14 +100,15 @@ const cellTypes = new CellTypes();
 const isRunning = ref(false);
 
 watch(displayCount, renderDrawingRate);
-
 watch(totalElpasedMs, renderCycleTime);
 
 const onClickReset = (): void => resetLangtonsLoops();
-
 const onClickStart = (): void => doLangtonsLoops();
-
 const onClickStop = (): void => stopLangtonsLoops();
+
+const limitCountBehavior = ref(LimitCountBehavior.DEFAULT);
+const limitCountBehaviors = LimitCountBehavior.all();
+const isInfiniteLimitCount = ():boolean => limitCountBehavior.value.isInfinite();
 
 function doLangtonsLoops() {
   isRunning.value = true;

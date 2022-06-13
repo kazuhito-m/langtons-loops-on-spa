@@ -15,4 +15,8 @@ export class LimitCountBehavior {
             LimitCountBehavior.FINITE
         ];
     }
+
+    public isInfinite(): boolean {
+        return this === LimitCountBehavior.INFINITE;
+    }
 }
