@@ -35,6 +35,7 @@
                   <v-text-field
                     v-model="maxExecuteCount"
                     :disabled="isRunning || isInfiniteOfLimitCount()"
+                    @keypress="numberOnlyKeyPressFilter"
                     label="上限回数"
                     counter="6"
                     maxlength="6"
@@ -221,6 +222,14 @@ const isDisableStart = () => isOverLimit();
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
+}
+
+function numberOnlyKeyPressFilter(event: KeyboardEvent): boolean {
+  if ("0123456789".includes(event.key)) return true;
+
+  event.stopImmediatePropagation();
+  event.preventDefault();
+  return false;
 }
 </script>
 
