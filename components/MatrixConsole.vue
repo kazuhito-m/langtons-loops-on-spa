@@ -61,7 +61,7 @@ const calculateCount = ref(0);
 const totalElpasedMs = ref(0);
 
 const canvasOneSideSize = ref(512);
-const maxExecuteCount = ref(5000);
+const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 
@@ -101,7 +101,7 @@ function doLangtonsLoops() {
   const rendaringLoopTimer = setInterval(() => {
     renderLives();
     if (!isRunning.value) clearInterval(rendaringLoopTimer);
-  }, 100);
+  }, 200);
 }
 
 function stopLangtonsLoops() {
