@@ -6,6 +6,7 @@
 import { LangtonsLoops } from "~/src/domain/langtonsloops/LangtonsLoops";
 import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
 import { CellTypes } from "./livescanvas/CellTypes";
+import { Rect } from "./livescanvas/Rect";
 
 const mainCanvas = ref<HTMLCanvasElement>();
 
@@ -38,18 +39,47 @@ function renderCanvasOf(
 ): void {
   const ratio = setting.zoom;
   const totalSize = matrix.length * ratio;
-  context.clearRect(0, 0, totalSize, totalSize);
-  context.beginPath();
+
+  const rects: Rect[] = [];
+
   for (let y = 0; y < matrix.length; y++) {
     const line = matrix[y];
+
+    let rect: Rect | null = null;
+
     for (let x = 0; x < line.length; x++) {
       const value = line[x];
-      if (value === 0) continue;
-      context.fillStyle = cellTypes.colorOf(value);
-      context.fillRect(x * ratio, y * ratio, ratio, ratio);
+
+      if (value === 0) {
+        if (rect !== null) {
+          rects.push(rect);
+          rect = null;
+        }
+      } else {
+        if (rect === null) {
+          rect = Rect.dotOf(x, y, ratio, value);
+        } else {
+          if (rect.colorType === value) {
+            rect = rect.expandSideways();
+          } else {
+            rects.push(rect);
+            rect = Rect.dotOf(x, y, ratio, value);
+          }
+        }
+      }
     }
+
+    rects.push(rect);
+  }
+
+  context.clearRect(0, 0, totalSize, totalSize);
+  context.beginPath();
+  for (const rect of rects) {
+    context.fillStyle = rect.color();
+    context.fillRect(rect.calcX(), rect.calcY(), rect.calcW(), rect.calcH());
   }
 }
+
 defineExpose({
   rendering,
 });

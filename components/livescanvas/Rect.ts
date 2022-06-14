@@ -7,10 +7,21 @@ export class Rect {
         private readonly w: number,
         private readonly h: number,
         private readonly retio: number,
-        private readonly colorType: number
+        public readonly colorType: number
     ) { }
 
     private static CELL_TYPES = new CellTypes();
+
+    public expandSideways(): Rect {
+        return new Rect(
+            this.x,
+            this.y,
+            this.w + 1,
+            this.h,
+            this.retio,
+            this.colorType
+        );
+    }
 
     public calcX = (): number => this.x * this.retio;
     public calcY = (): number => this.y * this.retio;
@@ -18,11 +29,10 @@ export class Rect {
     public calcH = (): number => this.h * this.retio;
     public color = (): string => Rect.CELL_TYPES.colorOf(this.colorType);
 
-    public static horizontalOf = (
+    public static dotOf = (
         x: number,
         y: number,
-        width: number,
         retio: number,
         colorType: number
-    ) => new Rect(x, y, width, 1, retio, colorType);
+    ) => new Rect(x, y, 1, 1, retio, colorType);
 }
