@@ -4,7 +4,7 @@ export class Rect {
     constructor(
         private readonly x: number,
         private readonly y: number,
-        private readonly w: number,
+        private w: number,
         private readonly h: number,
         private readonly retio: number,
         public readonly colorType: number
@@ -12,7 +12,7 @@ export class Rect {
 
     private static CELL_TYPES = new CellTypes();
 
-    public expandSideways(): Rect {
+    public renewExpandSideways(): Rect {
         return new Rect(
             this.x,
             this.y,
@@ -21,6 +21,10 @@ export class Rect {
             this.retio,
             this.colorType
         );
+    }
+
+    public expandSideways(): void {
+        this.w++;
     }
 
     public calcX(): number { return this.x * this.retio; }

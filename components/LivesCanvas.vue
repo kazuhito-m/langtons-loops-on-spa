@@ -61,7 +61,7 @@ function renderCanvasOf(
           rect = Rect.dotOf(x, y, ratio, value);
         } else {
           if (rect.colorType === value) {
-            rect = rect.expandSideways();
+            rect.expandSideways();
           } else {
             rects.push(rect);
             rect = Rect.dotOf(x, y, ratio, value);
