@@ -94,14 +94,8 @@
             >
               STOP
             </v-btn>
-            <v-btn color="red" outlined @click="onClickTest"> テースト </v-btn>
           </v-card-actions>
         </v-col>
-        <v-col>
-          <canvas ref="matrixCanvas" width="512" height="512"></canvas>
-        </v-col>
-      </v-row>
-      <v-row>
         <v-col>
           <LivesCanvas ref="livesCanvas" :setting="canvasSetting" />
         </v-col>
@@ -113,7 +107,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
-import { CellTypes } from "./matrixconsole/CellTypes";
 import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
 import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
 
@@ -129,7 +122,6 @@ const totalElpasedMs = ref(0);
 const worldOneSideSize = ref(512);
 const maxExecuteCount = ref(10000);
 
-const matrixCanvas = ref<HTMLCanvasElement>(null);
 const livesCanvas = ref(null);
 
 const zoomParcent = ref(PERCENTAGE);
@@ -138,7 +130,6 @@ const canvasSetting: LivesCanvasSetting = {
 };
 
 const langtonsLoops = LangtonsLoops.of(worldOneSideSize.value);
-const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
 
@@ -151,10 +142,6 @@ const onMounted = () => resetLangtonsLoops();
 const onClickReset = (): void => resetLangtonsLoops();
 const onClickStart = (): void => doLangtonsLoops();
 const onClickStop = (): void => stopLangtonsLoops();
-
-const onClickTest = (): void => {
-  livesCanvas.value.renderCanvasWithResizeOf();
-};
 
 const limitCountBehavior = ref(LimitCountBehavior.DEFAULT);
 const limitCountBehaviors = LimitCountBehavior.all();
@@ -201,41 +188,6 @@ function resetLangtonsLoops() {
   renderLives();
 }
 
-function renderCanvasWithResizeOf(
-  matrix: number[][]
-): CanvasRenderingContext2D {
-  const canvas = matrixCanvas.value;
-  const oneSideSize = matrix.length * canvasSetting.zoom;
-  if (canvas.height !== oneSideSize) {
-    canvas.width = oneSideSize;
-    canvas.height = oneSideSize;
-  }
-  const context: CanvasRenderingContext2D = canvas.getContext("2d");
-
-  renderCanvasOf(matrix, context);
-
-  return context;
-}
-
-function renderCanvasOf(
-  matrix: number[][],
-  context: CanvasRenderingContext2D
-): void {
-  const ratio = canvasSetting.zoom;
-  const totalSize = matrix.length * ratio;
-  context.clearRect(0, 0, totalSize, totalSize);
-  context.beginPath();
-  for (let y = 0; y < matrix.length; y++) {
-    const line = matrix[y];
-    for (let x = 0; x < line.length; x++) {
-      const value = line[x];
-      if (value === 0) continue;
-      context.fillStyle = cellTypes.colorOf(value);
-      context.fillRect(x * ratio, y * ratio, ratio, ratio);
-    }
-  }
-}
-
 function withMeasure(actions: () => void): void {
   const startTime = Date.now();
 
@@ -266,7 +218,6 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  renderCanvasWithResizeOf(langtonsLoops.lives);
   livesCanvas.value.renderCanvasWithResizeOf(langtonsLoops.lives);
 
   drawingLock = false;
