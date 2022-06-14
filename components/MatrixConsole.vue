@@ -21,7 +21,7 @@
               <v-row dense no-gutters>
                 <v-col>
                   <v-text-field
-                    v-model="canvasOneSideSize"
+                    v-model="worldOneSideSize"
                     :disabled="isRunning || !isStatusOfReseted()"
                     @keypress="numberOnlyKeyPressFilter"
                     label="世界の大きさ(CanvasSize)※RESETで反映"
@@ -61,6 +61,18 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <div class="text-caption">拡大率 : {{ zoomParcent }} %</div>
+                  <v-slider
+                    v-model="zoomParcent"
+                    thumb-label
+                    min="100"
+                    max="300"
+                    step="1"
+                  ></v-slider>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -87,8 +99,8 @@
         <v-col>
           <canvas
             ref="matrixCanvas"
-            :width="canvasHtmlOutsideSize"
-            :height="canvasHtmlOutsideSize"
+            width="512"
+            height="512"
           ></canvas>
         </v-col>
       </v-row>
@@ -102,6 +114,8 @@ import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
 
+const PERCENTAGE = 100;
+
 const cycleTime = ref("-");
 const totalTime = ref("-");
 const drawingRate = ref(0);
@@ -109,19 +123,22 @@ const displayCount = ref(0);
 const calculateCount = ref(0);
 const totalElpasedMs = ref(0);
 
-const canvasOneSideSize = ref(512);
+const worldOneSideSize = ref(512);
 const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
-const canvasHtmlOutsideSize = ref(canvasOneSideSize.value);
 
-const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
+const zoomParcent = ref(PERCENTAGE);
+const zoom = () => zoomParcent.value / PERCENTAGE;
+
+const langtonsLoops = LangtonsLoops.of(worldOneSideSize.value);
 const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
 
 watch(displayCount, renderDrawingRate);
 watch(totalElpasedMs, renderCycleTime);
+watch(zoomParcent, renderLives);
 
 const onMounted = () => resetLangtonsLoops();
 
@@ -138,7 +155,8 @@ function doLangtonsLoops() {
 
   if (isStatusOfReseted()) resetLangtonsLoops();
 
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  renderLives();
+  displayCount.value++;
 
   const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
@@ -155,6 +173,7 @@ function doLangtonsLoops() {
 
   const rendaringLoopTimer = setInterval(() => {
     renderLives();
+    displayCount.value++;
     if (!isRunning.value) clearInterval(rendaringLoopTimer);
   }, 200);
 }
@@ -168,18 +187,18 @@ function resetLangtonsLoops() {
   calculateCount.value = 1;
   displayCount.value = 0;
   totalElpasedMs.value = 0;
-  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  langtonsLoops.langtonsLoops(worldOneSideSize.value);
+  renderLives();
 }
 
 function renderCanvasWithResizeOf(
   matrix: number[][]
 ): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
-  if (canvas.height !== matrix.length) {
-    canvas.width = matrix[0].length;
-    canvas.height = matrix.length;
-    canvasOneSideSize.value = matrix.length;
+  const oneSideSize = matrix.length * zoom();
+  if (canvas.height !== oneSideSize) {
+    canvas.width = oneSideSize;
+    canvas.height = oneSideSize;
   }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
@@ -192,7 +211,9 @@ function renderCanvasOf(
   matrix: number[][],
   context: CanvasRenderingContext2D
 ): void {
-  context.clearRect(0, 0, matrix[0].length, matrix.length);
+  const ratio = zoom();
+  const totalSize = matrix.length * ratio;
+  context.clearRect(0, 0, totalSize, totalSize);
   context.beginPath();
   for (let y = 0; y < matrix.length; y++) {
     const line = matrix[y];
@@ -200,7 +221,7 @@ function renderCanvasOf(
       const value = line[x];
       if (value === 0) continue;
       context.fillStyle = cellTypes.colorOf(value);
-      context.fillRect(x, y, 1, 1);
+      context.fillRect(x * ratio, y * ratio, ratio, ratio);
     }
   }
 }
@@ -235,7 +256,6 @@ function renderLives(): void {
 
   renderCanvasWithResizeOf(langtonsLoops.lives);
 
-  displayCount.value++;
   drawingLock = false;
 }
 
@@ -244,7 +264,7 @@ const isOverLimit = () =>
 
 const isDisableStart = () =>
   isOverLimit() ||
-  validateCanvasOneSideSizeOf(canvasOneSideSize.value) !== true;
+  validateCanvasOneSideSizeOf(worldOneSideSize.value) !== true;
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
@@ -274,5 +294,6 @@ const isStatusOfReseted = () => displayCount.value <= 0;
 canvas {
   border: 1px solid;
   border-color: white;
+  background-color: black;
 }
 </style>
