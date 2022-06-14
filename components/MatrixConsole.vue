@@ -258,9 +258,4 @@ const isStatusOfReseted = () => displayCount.value <= 0;
 </script>
 
 <style scoped>
-canvas {
-  border: 1px solid;
-  border-color: white;
-  background-color: black;
-}
 </style>
