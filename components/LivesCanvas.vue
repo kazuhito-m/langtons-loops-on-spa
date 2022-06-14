@@ -5,12 +5,9 @@
 <script setup lang="ts">
 import { LangtonsLoops } from "~/src/domain/langtonsloops/LangtonsLoops";
 import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
-import { CellTypes } from "./livescanvas/CellTypes";
 import { Rect } from "./livescanvas/Rect";
 
 const mainCanvas = ref<HTMLCanvasElement>();
-
-const cellTypes = new CellTypes();
 
 type Props = {
   langtonsLoops: LangtonsLoops;
@@ -71,6 +68,8 @@ function renderCanvasOf(
 
     rects.push(rect);
   }
+
+  console.log("rect:" + rects.length);
 
   context.clearRect(0, 0, totalSize, totalSize);
   context.beginPath();
