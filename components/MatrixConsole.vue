@@ -21,7 +21,7 @@
               <v-row dense no-gutters>
                 <v-col>
                   <v-text-field
-                    v-model="canvasOneSideSize"
+                    v-model="worldOneSideSize"
                     :disabled="isRunning || !isStatusOfReseted()"
                     @keypress="numberOnlyKeyPressFilter"
                     label="世界の大きさ(CanvasSize)※RESETで反映"
@@ -123,16 +123,15 @@ const displayCount = ref(0);
 const calculateCount = ref(0);
 const totalElpasedMs = ref(0);
 
-const canvasOneSideSize = ref(512);
+const worldOneSideSize = ref(512);
 const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
-const canvasHtmlOutsideSize = ref(canvasOneSideSize.value);
 
 const zoomParcent = ref(PERCENTAGE);
 const zoom = () => zoomParcent.value / PERCENTAGE;
 
-const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
+const langtonsLoops = LangtonsLoops.of(worldOneSideSize.value);
 const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
@@ -188,7 +187,7 @@ function resetLangtonsLoops() {
   calculateCount.value = 1;
   displayCount.value = 0;
   totalElpasedMs.value = 0;
-  langtonsLoops.langtonsLoops(canvasOneSideSize.value);
+  langtonsLoops.langtonsLoops(worldOneSideSize.value);
   renderLives();
 }
 
@@ -265,7 +264,7 @@ const isOverLimit = () =>
 
 const isDisableStart = () =>
   isOverLimit() ||
-  validateCanvasOneSideSizeOf(canvasOneSideSize.value) !== true;
+  validateCanvasOneSideSizeOf(worldOneSideSize.value) !== true;
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
