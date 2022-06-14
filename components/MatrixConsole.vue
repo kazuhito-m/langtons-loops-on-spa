@@ -99,8 +99,8 @@
         <v-col>
           <canvas
             ref="matrixCanvas"
-            :width="canvasHtmlOutsideSize"
-            :height="canvasHtmlOutsideSize"
+            width="512"
+            height="512"
           ></canvas>
         </v-col>
       </v-row>
@@ -139,6 +139,7 @@ const isRunning = ref(false);
 
 watch(displayCount, renderDrawingRate);
 watch(totalElpasedMs, renderCycleTime);
+watch(zoomParcent, renderLives);
 
 const onMounted = () => resetLangtonsLoops();
 
@@ -156,6 +157,7 @@ function doLangtonsLoops() {
   if (isStatusOfReseted()) resetLangtonsLoops();
 
   renderLives();
+  displayCount.value++;
 
   const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
@@ -172,6 +174,7 @@ function doLangtonsLoops() {
 
   const rendaringLoopTimer = setInterval(() => {
     renderLives();
+    displayCount.value++;
     if (!isRunning.value) clearInterval(rendaringLoopTimer);
   }, 200);
 }
@@ -197,7 +200,6 @@ function renderCanvasWithResizeOf(
   if (canvas.height !== oneSideSize) {
     canvas.width = oneSideSize;
     canvas.height = oneSideSize;
-    canvasHtmlOutsideSize.value = oneSideSize;
   }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
@@ -211,7 +213,7 @@ function renderCanvasOf(
   context: CanvasRenderingContext2D
 ): void {
   const ratio = zoom();
-  const totalSize = canvasHtmlOutsideSize.value;
+  const totalSize = matrix.length * ratio;
   context.clearRect(0, 0, totalSize, totalSize);
   context.beginPath();
   for (let y = 0; y < matrix.length; y++) {
@@ -253,9 +255,8 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  renderLives();
+  renderCanvasWithResizeOf(langtonsLoops.lives);
 
-  displayCount.value++;
   drawingLock = false;
 }
 
@@ -294,5 +295,6 @@ const isStatusOfReseted = () => displayCount.value <= 0;
 canvas {
   border: 1px solid;
   border-color: white;
+  background-color: black;
 }
 </style>
