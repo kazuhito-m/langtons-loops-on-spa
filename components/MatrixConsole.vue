@@ -61,6 +61,18 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <div class="text-caption">拡大率 : {{ zoom }} %</div>
+                  <v-slider
+                    v-model="zoom"
+                    thumb-label
+                    min="100"
+                    max="300"
+                    step="1"
+                  ></v-slider>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -114,6 +126,8 @@ const maxExecuteCount = ref(10000);
 
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 const canvasHtmlOutsideSize = ref(canvasOneSideSize.value);
+
+const zoom = ref(100);
 
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
