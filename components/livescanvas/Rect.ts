@@ -23,11 +23,11 @@ export class Rect {
         );
     }
 
-    public calcX = (): number => this.x * this.retio;
-    public calcY = (): number => this.y * this.retio;
-    public calcW = (): number => this.w * this.retio;
-    public calcH = (): number => this.h * this.retio;
-    public color = (): string => Rect.CELL_TYPES.colorOf(this.colorType);
+    public calcX(): number { return this.x * this.retio; }
+    public calcY(): number { return this.y * this.retio; }
+    public calcW(): number { return this.w * this.retio; }
+    public calcH(): number { return this.h * this.retio; }
+    public color(): string { return Rect.CELL_TYPES.colorOf(this.colorType); }
 
     public static dotOf = (
         x: number,

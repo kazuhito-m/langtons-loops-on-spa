@@ -37,6 +37,8 @@ function renderCanvasOf(
   const ratio = setting.zoom;
   const totalSize = matrix.length * ratio;
 
+  let debugValueCount = 0;
+
   const rects: Rect[] = [];
 
   for (let y = 0; y < matrix.length; y++) {
@@ -53,6 +55,8 @@ function renderCanvasOf(
           rect = null;
         }
       } else {
+        debugValueCount++;
+
         if (rect === null) {
           rect = Rect.dotOf(x, y, ratio, value);
         } else {
@@ -66,10 +70,10 @@ function renderCanvasOf(
       }
     }
 
-    rects.push(rect);
+    if (rect !== null) rects.push(rect);
   }
 
-  console.log("rect:" + rects.length);
+  console.log("rect:" + rects.length + ", valueCount:" + debugValueCount);
 
   context.clearRect(0, 0, totalSize, totalSize);
   context.beginPath();
