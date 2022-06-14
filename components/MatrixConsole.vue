@@ -155,7 +155,7 @@ function doLangtonsLoops() {
 
   if (isStatusOfReseted()) resetLangtonsLoops();
 
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  renderLives();
 
   const calculateLoopTimer = setInterval(() => {
     withMeasure(() => {
@@ -186,7 +186,7 @@ function resetLangtonsLoops() {
   displayCount.value = 0;
   totalElpasedMs.value = 0;
   langtonsLoops.langtonsLoops(canvasOneSideSize.value);
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  renderLives();
 }
 
 function renderCanvasWithResizeOf(
@@ -253,7 +253,7 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  renderLives();
 
   displayCount.value++;
   drawingLock = false;
