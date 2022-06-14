@@ -63,9 +63,9 @@
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  <div class="text-caption">拡大率 : {{ zoom }} %</div>
+                  <div class="text-caption">拡大率 : {{ zoomParcent }} %</div>
                   <v-slider
-                    v-model="zoom"
+                    v-model="zoomParcent"
                     thumb-label
                     min="100"
                     max="300"
@@ -114,6 +114,8 @@ import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
 import { CellTypes } from "./matrixconsole/CellTypes";
 import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
 
+const PERCENTAGE = 100;
+
 const cycleTime = ref("-");
 const totalTime = ref("-");
 const drawingRate = ref(0);
@@ -127,7 +129,8 @@ const maxExecuteCount = ref(10000);
 const matrixCanvas = ref<HTMLCanvasElement>(null);
 const canvasHtmlOutsideSize = ref(canvasOneSideSize.value);
 
-const zoom = ref(100);
+const zoomParcent = ref(PERCENTAGE);
+const zoom = () => zoomParcent.value / PERCENTAGE;
 
 const langtonsLoops = LangtonsLoops.of(canvasOneSideSize.value);
 const cellTypes = new CellTypes();
@@ -190,10 +193,11 @@ function renderCanvasWithResizeOf(
   matrix: number[][]
 ): CanvasRenderingContext2D {
   const canvas = matrixCanvas.value;
-  if (canvas.height !== matrix.length) {
-    canvas.width = matrix[0].length;
-    canvas.height = matrix.length;
-    canvasOneSideSize.value = matrix.length;
+  const oneSideSize = matrix.length * zoom();
+  if (canvas.height !== oneSideSize) {
+    canvas.width = oneSideSize;
+    canvas.height = oneSideSize;
+    canvasHtmlOutsideSize.value = oneSideSize;
   }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
@@ -206,7 +210,9 @@ function renderCanvasOf(
   matrix: number[][],
   context: CanvasRenderingContext2D
 ): void {
-  context.clearRect(0, 0, matrix[0].length, matrix.length);
+  const ratio = zoom();
+  const totalSize = canvasHtmlOutsideSize.value;
+  context.clearRect(0, 0, totalSize, totalSize);
   context.beginPath();
   for (let y = 0; y < matrix.length; y++) {
     const line = matrix[y];
@@ -214,7 +220,7 @@ function renderCanvasOf(
       const value = line[x];
       if (value === 0) continue;
       context.fillStyle = cellTypes.colorOf(value);
-      context.fillRect(x, y, 1, 1);
+      context.fillRect(x * ratio, y * ratio, ratio, ratio);
     }
   }
 }
