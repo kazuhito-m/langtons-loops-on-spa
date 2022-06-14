@@ -97,11 +97,11 @@
           </v-card-actions>
         </v-col>
         <v-col>
-          <canvas
-            ref="matrixCanvas"
-            width="512"
-            height="512"
-          ></canvas>
+          <LivesCanvas
+            ref="livesCanvas"
+            :setting="canvasSetting"
+            :langtonsLoops="langtonsLoops"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -111,8 +111,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { LangtonsLoops } from "../src/domain/langtonsloops/LangtonsLoops";
-import { CellTypes } from "./matrixconsole/CellTypes";
 import { LimitCountBehavior } from "./matrixconsole/LimitCountBehavior";
+import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
 
 const PERCENTAGE = 100;
 
@@ -126,13 +126,14 @@ const totalElpasedMs = ref(0);
 const worldOneSideSize = ref(512);
 const maxExecuteCount = ref(10000);
 
-const matrixCanvas = ref<HTMLCanvasElement>(null);
+const livesCanvas = ref(null);
 
 const zoomParcent = ref(PERCENTAGE);
-const zoom = () => zoomParcent.value / PERCENTAGE;
+const canvasSetting: LivesCanvasSetting = {
+  zoom: 1,
+};
 
 const langtonsLoops = LangtonsLoops.of(worldOneSideSize.value);
-const cellTypes = new CellTypes();
 
 const isRunning = ref(false);
 
@@ -191,41 +192,6 @@ function resetLangtonsLoops() {
   renderLives();
 }
 
-function renderCanvasWithResizeOf(
-  matrix: number[][]
-): CanvasRenderingContext2D {
-  const canvas = matrixCanvas.value;
-  const oneSideSize = matrix.length * zoom();
-  if (canvas.height !== oneSideSize) {
-    canvas.width = oneSideSize;
-    canvas.height = oneSideSize;
-  }
-  const context: CanvasRenderingContext2D = canvas.getContext("2d");
-
-  renderCanvasOf(matrix, context);
-
-  return context;
-}
-
-function renderCanvasOf(
-  matrix: number[][],
-  context: CanvasRenderingContext2D
-): void {
-  const ratio = zoom();
-  const totalSize = matrix.length * ratio;
-  context.clearRect(0, 0, totalSize, totalSize);
-  context.beginPath();
-  for (let y = 0; y < matrix.length; y++) {
-    const line = matrix[y];
-    for (let x = 0; x < line.length; x++) {
-      const value = line[x];
-      if (value === 0) continue;
-      context.fillStyle = cellTypes.colorOf(value);
-      context.fillRect(x * ratio, y * ratio, ratio, ratio);
-    }
-  }
-}
-
 function withMeasure(actions: () => void): void {
   const startTime = Date.now();
 
@@ -251,10 +217,12 @@ function renderDrawingRate(): void {
 let drawingLock = false;
 
 function renderLives(): void {
+  canvasSetting.zoom = zoomParcent.value / PERCENTAGE;
+
   if (drawingLock) return;
   drawingLock = true;
 
-  renderCanvasWithResizeOf(langtonsLoops.lives);
+  livesCanvas.value.rendering();
 
   drawingLock = false;
 }
@@ -263,8 +231,7 @@ const isOverLimit = () =>
   !isInfiniteOfLimitCount() && calculateCount.value >= maxExecuteCount.value;
 
 const isDisableStart = () =>
-  isOverLimit() ||
-  validateCanvasOneSideSizeOf(worldOneSideSize.value) !== true;
+  isOverLimit() || validateCanvasOneSideSizeOf(worldOneSideSize.value) !== true;
 
 function formatNumberOf(value: number, fractionDigits = 0) {
   return Number(value.toFixed(fractionDigits)).toLocaleString();
@@ -291,9 +258,4 @@ const isStatusOfReseted = () => displayCount.value <= 0;
 </script>
 
 <style scoped>
-canvas {
-  border: 1px solid;
-  border-color: white;
-  background-color: black;
-}
 </style>
