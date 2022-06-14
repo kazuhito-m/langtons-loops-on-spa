@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import { LangtonsLoops } from "~/src/domain/langtonsloops/LangtonsLoops";
 import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
 import { CellTypes } from "./matrixconsole/CellTypes";
 
@@ -11,24 +12,22 @@ const mainCanvas = ref<HTMLCanvasElement>();
 const cellTypes = new CellTypes();
 
 type Props = {
+  langtonsLoops: LangtonsLoops;
   setting: LivesCanvasSetting;
 };
-const { setting } = defineProps<Props>();
+const { langtonsLoops, setting } = defineProps<Props>();
 
-function renderCanvasWithResizeOf(
-  matrix: number[][]
-): CanvasRenderingContext2D {
-  console.log("zoom:",setting.zoom);
-
+function rendering(): CanvasRenderingContext2D {
+  const leves = langtonsLoops.lives;
   const canvas = mainCanvas.value;
-  const oneSideSize = matrix.length * setting.zoom;
+  const oneSideSize = leves.length * setting.zoom;
   if (canvas.height !== oneSideSize) {
     canvas.width = oneSideSize;
     canvas.height = oneSideSize;
   }
   const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
-  renderCanvasOf(matrix, context);
+  renderCanvasOf(leves, context);
 
   return context;
 }
@@ -52,7 +51,7 @@ function renderCanvasOf(
   }
 }
 defineExpose({
-  renderCanvasWithResizeOf,
+  rendering,
 });
 </script>
 

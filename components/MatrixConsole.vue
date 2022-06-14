@@ -97,7 +97,11 @@
           </v-card-actions>
         </v-col>
         <v-col>
-          <LivesCanvas ref="livesCanvas" :setting="canvasSetting" />
+          <LivesCanvas
+            ref="livesCanvas"
+            :setting="canvasSetting"
+            :langtonsLoops="langtonsLoops"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -218,7 +222,7 @@ function renderLives(): void {
   if (drawingLock) return;
   drawingLock = true;
 
-  livesCanvas.value.renderCanvasWithResizeOf(langtonsLoops.lives);
+  livesCanvas.value.rendering();
 
   drawingLock = false;
 }
