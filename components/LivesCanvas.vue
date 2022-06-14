@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { LangtonsLoops } from "~/src/domain/langtonsloops/LangtonsLoops";
 import { LivesCanvasSetting } from "./livescanvas/LivesCanvasSetting";
-import { CellTypes } from "./matrixconsole/CellTypes";
+import { CellTypes } from "./livescanvas/CellTypes";
 
 const mainCanvas = ref<HTMLCanvasElement>();
 
