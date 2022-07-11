@@ -11,7 +11,7 @@
     "@nuxt/test-utils-edge": "^3.0.0-rc.4-27585508.c9d4b2e",
     "jsdom": "^19.0.0",
     "nuxt": "3.0.0-rc.4",
-    "vitest": "^0.14.2"
+    "vitest": "^0.18.0"
   },
   "dependencies": {
     "sass": "^1.52.3",
